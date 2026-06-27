@@ -1,21 +1,35 @@
 import express, { NextFunction, Request, Response } from "express";
 import { AuthController } from "../controllers/AuthController";
-import { validator } from "../validator/registerValidator";
-import { registerSchema } from "../validator/auth.schema";
+import { validator } from "../validator/validator";
+import { loginSchema, registerSchema } from "../validator/auth.schema";
 import { UserService } from "../services/UserService";
 import { TokenService } from "../services/TokenService";
+import { CredentialService } from "../services/CredentialService";
 
 const authRouter = express.Router();
 
 const userService = new UserService();
 const tokenService = new TokenService();
-const authController = new AuthController(userService, tokenService);
+const credentialService = new CredentialService();
+const authController = new AuthController(
+    userService,
+    tokenService,
+    credentialService,
+);
 
 authRouter.post(
     "/register",
     validator(registerSchema),
     (req: Request, res: Response, next: NextFunction) => {
         void authController.register(req, res, next);
+    },
+);
+
+authRouter.post(
+    "/login",
+    validator(loginSchema),
+    (req: Request, res: Response, next: NextFunction) => {
+        void authController.login(req, res, next);
     },
 );
 
