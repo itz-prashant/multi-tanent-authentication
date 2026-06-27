@@ -15,7 +15,21 @@ export class AuthController {
                 password,
             });
 
-            res.json(user);
+            res.cookie("accessToken", "abhauhdu323", {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60, // 1h,
+                httpOnly: true,
+            });
+
+            res.cookie("refreshToken", "anjnd38hu38h", {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60 * 24 * 365, // 1h,
+                httpOnly: true,
+            });
+
+            res.json({ id: user.id });
         } catch (error) {
             next(error);
             return;
