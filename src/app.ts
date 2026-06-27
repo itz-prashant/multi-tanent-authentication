@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import { HttpError } from "http-errors";
+import AuthRouter from "./routes/auth";
 
 const app = express();
 
@@ -8,6 +9,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send("Welcome to auth service");
 });
+
+app.use("/auth", AuthRouter);
 
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
     void next;
