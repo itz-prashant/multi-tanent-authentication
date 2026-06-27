@@ -5,6 +5,8 @@ import { loginSchema, registerSchema } from "../validator/auth.schema";
 import { UserService } from "../services/UserService";
 import { TokenService } from "../services/TokenService";
 import { CredentialService } from "../services/CredentialService";
+import authenticate from "../middlewares/authenticate";
+import { AuthRequest } from "../types/inedex";
 
 const authRouter = express.Router();
 
@@ -32,5 +34,9 @@ authRouter.post(
         void authController.login(req, res, next);
     },
 );
+
+authRouter.get("/self", authenticate, (req, res) => {
+    void authController.self(req as AuthRequest, res);
+});
 
 export default authRouter;

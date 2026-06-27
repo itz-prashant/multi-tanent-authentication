@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { RegisterUserBody } from "../types/inedex";
+import { AuthRequest, RegisterUserBody } from "../types/inedex";
 import { UserService } from "../services/UserService";
 import { JwtPayload } from "jsonwebtoken";
 import { TokenService } from "../services/TokenService";
@@ -121,5 +121,10 @@ export class AuthController {
             next(error);
             return;
         }
+    }
+
+    async self(req: AuthRequest, res: Response) {
+        const user = await this.userService.findById(req.auth.sub);
+        res.json(user);
     }
 }

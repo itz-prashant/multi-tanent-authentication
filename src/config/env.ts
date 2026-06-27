@@ -5,12 +5,13 @@ config({
     path: path.join(__dirname, `../../.env.${process.env.NODE_ENV || "dev"}`),
 });
 
-const { PORT, DATABASE_URL, REFRESH_TOKEN_SECRET } = process.env;
+const { PORT, DATABASE_URL, REFRESH_TOKEN_SECRET, JWKS_URI } = process.env;
 
 const Config = {
     PORT,
     DATABASE_URL,
     REFRESH_TOKEN_SECRET,
+    JWKS_URI,
 };
 
 export default Config;
