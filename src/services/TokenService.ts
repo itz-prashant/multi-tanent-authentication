@@ -4,7 +4,6 @@ import fs from "node:fs";
 import path from "node:path";
 import Config from "../config/env";
 import prisma from "../lib/prisma";
-import { User } from "../generated/prisma/client";
 
 export class TokenService {
     generateAccessToken(payload: JwtPayload) {
@@ -41,16 +40,24 @@ export class TokenService {
         return refreshToken;
     }
 
-    async persistRefreshToken(user: User) {
+    async persistRefreshToken(id: string) {
         const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
 
         const newRefreshToken = await prisma.refreshToken.create({
             data: {
-                userId: user.id,
+                userId: id,
                 expiresAt: new Date(Date.now() + MS_IN_YEAR),
             },
         });
 
         return newRefreshToken;
+    }
+
+    async deleteRefreshToken(id: number) {
+        return await prisma.refreshToken.delete({
+            where: {
+                id,
+            },
+        });
     }
 }

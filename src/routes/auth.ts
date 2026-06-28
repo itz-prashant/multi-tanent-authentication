@@ -7,6 +7,7 @@ import { TokenService } from "../services/TokenService";
 import { CredentialService } from "../services/CredentialService";
 import authenticate from "../middlewares/authenticate";
 import { AuthRequest } from "../types/inedex";
+import validateRefreshToken from "../middlewares/validateRefreshToken";
 
 const authRouter = express.Router();
 
@@ -37,6 +38,10 @@ authRouter.post(
 
 authRouter.get("/self", authenticate, (req, res) => {
     void authController.self(req as AuthRequest, res);
+});
+
+authRouter.post("/refresh", validateRefreshToken, (req, res, next) => {
+    void authController.refresh(req as AuthRequest, res, next);
 });
 
 export default authRouter;
