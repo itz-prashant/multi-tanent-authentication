@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import rsaPemToJwk from "rsa-pem-to-jwk";
 
-const privateKey = fs.readFileSync("./certs/private.pem")
+const privateKey = fs.readFileSync("./certs/private.pem");
 
-const jwk = rsaPemToJwk(privateKey, {use: "sig"}, "public")
+const jwk = rsaPemToJwk(privateKey, { use: "sig" }, "public");
 
-void jwk
+void jwk;
 // console.log(JSON.stringify(jwk))
