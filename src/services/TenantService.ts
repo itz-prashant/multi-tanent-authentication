@@ -14,4 +14,12 @@ export class TenantService {
     async getAll() {
         return await prisma.tenant.findMany();
     }
+
+    async findById(id: number) {
+        return await prisma.tenant.findUnique({
+            where: {
+                id,
+            },
+        });
+    }
 }
