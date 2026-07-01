@@ -32,4 +32,10 @@ export class TenantService {
             },
         });
     }
+
+    async deleteById(id: number) {
+        return await prisma.tenant.delete({
+            where: { id },
+        });
+    }
 }

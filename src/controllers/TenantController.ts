@@ -61,6 +61,28 @@ export class TenantController {
                 name,
                 address,
             });
+
+            res.json({
+                message: `Tenant ${Number(tenantId)} update sucessfully`,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async delete(req: CreateTenantBody, res: Response, next: NextFunction) {
+        const tenantId = req.params.id;
+
+        if (isNaN(Number(tenantId))) {
+            const error = createHttpError(400, "Invalid url param.");
+            next(error);
+            return;
+        }
+        try {
+            await this.tenantService.deleteById(Number(tenantId));
+            res.json({
+                message: `Tenant ${Number(tenantId)} delete sucessfully`,
+            });
         } catch (error) {
             next(error);
         }
