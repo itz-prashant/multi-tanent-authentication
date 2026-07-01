@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { HttpError } from "http-errors";
 import AuthRouter from "./routes/auth";
+import TenantRouter from "./routes/tenant";
 import cookieParse from "cookie-parser";
 
 const app = express();
@@ -14,6 +15,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", AuthRouter);
+app.use("/tenants", TenantRouter);
 
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
     void next;

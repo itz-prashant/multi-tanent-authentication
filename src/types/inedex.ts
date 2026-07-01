@@ -26,3 +26,12 @@ export interface AuthRequest extends Request {
 export interface IRefreshTokenPayload {
     id: string;
 }
+
+export interface TenantData {
+    name: string;
+    address: string;
+}
+
+export interface CreateTenantBody extends Request {
+    body: TenantData;
+}
