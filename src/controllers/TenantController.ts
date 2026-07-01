@@ -45,4 +45,24 @@ export class TenantController {
             next(error);
         }
     }
+
+    async update(req: CreateTenantBody, res: Response, next: NextFunction) {
+        const tenantId = req.params.id;
+        const { name, address } = req.body;
+
+        if (isNaN(Number(tenantId))) {
+            const error = createHttpError(400, "Invalid url param.");
+            next(error);
+            return;
+        }
+
+        try {
+            await this.tenantService.updateById(Number(tenantId), {
+                name,
+                address,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }

@@ -22,4 +22,14 @@ export class TenantService {
             },
         });
     }
+
+    async updateById(id: number, tenantData: TenantData) {
+        return await prisma.tenant.update({
+            where: { id },
+            data: {
+                name: tenantData.name,
+                address: tenantData.address,
+            },
+        });
+    }
 }
