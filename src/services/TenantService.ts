@@ -10,4 +10,8 @@ export class TenantService {
             },
         });
     }
+
+    async getAll() {
+        return await prisma.tenant.findMany();
+    }
 }
