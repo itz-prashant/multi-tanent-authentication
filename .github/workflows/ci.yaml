@@ -40,7 +40,7 @@ jobs:
     env:
       IMAGE_NAME: itzprashant/multi_tenant_auth_service
       IMAGE_TAG: build-${{github.run_number}}
-    if: github.ref == "refs/heads/main" && github.event_name == "push"
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
