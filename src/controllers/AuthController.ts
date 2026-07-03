@@ -5,6 +5,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { TokenService } from "../services/TokenService";
 import createHttpError from "http-errors";
 import { CredentialService } from "../services/CredentialService";
+import { Role } from "../generated/prisma/enums";
 export class AuthController {
     constructor(
         private userService: UserService,
@@ -20,6 +21,7 @@ export class AuthController {
                 userName,
                 email,
                 password,
+                role: Role.CUSTOMER,
             });
 
             const payload: JwtPayload = {
