@@ -4,7 +4,10 @@ import { CreateUserRequest } from "../types/inedex";
 import createHttpError from "http-errors";
 
 export class UserController {
-    constructor(private userService: UserService) {}
+    private readonly userService: UserService;
+    constructor(userService: UserService) {
+        this.userService = userService;
+    }
 
     async create(req: CreateUserRequest, res: Response, next: NextFunction) {
         const { userName, email, password, role, tenantId } = req.body;
@@ -37,7 +40,7 @@ export class UserController {
     async getOne(req: Request, res: Response, next: NextFunction) {
         const userId = req.params.id;
 
-        if (isNaN(Number(userId))) {
+        if (Number(userId)) {
             next(createHttpError(400, "Invalid url param."));
             return;
         }
@@ -54,7 +57,7 @@ export class UserController {
         const userId = req.params.id;
         const { userName, email, role } = req.body;
 
-        if (isNaN(Number(userId))) {
+        if (Number(userId)) {
             next(createHttpError(400, "Invalid url param."));
             return;
         }
@@ -74,7 +77,7 @@ export class UserController {
     async delete(req: Request, res: Response, next: NextFunction) {
         const userId = req.params.id;
 
-        if (isNaN(Number(userId))) {
+        if (Number(userId)) {
             next(createHttpError(400, "Invalid url param."));
             return;
         }
