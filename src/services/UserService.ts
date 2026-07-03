@@ -1,10 +1,10 @@
 import createHttpError from "http-errors";
 import prisma from "../lib/prisma";
-import { UserData } from "../types/inedex";
+import { LimitedUserData, UserData } from "../types/inedex";
 import bcrypt from "bcrypt";
 
 export class UserService {
-    async create({ userName, email, password }: UserData) {
+    async create({ userName, email, password, role, tenantId }: UserData) {
         try {
             const existingUser = await prisma.user.findUnique({
                 where: { email },
@@ -23,6 +23,8 @@ export class UserService {
                     userName,
                     email,
                     password: hashedPassword,
+                    role: role,
+                    tenantId,
                 },
             });
         } catch {
@@ -32,13 +34,13 @@ export class UserService {
     }
 
     async findByEmail(email: string) {
-        return prisma.user.findUnique({
+        return await prisma.user.findUnique({
             where: { email },
         });
     }
 
     async findById(id: string) {
-        return prisma.user.findUnique({
+        return await prisma.user.findUnique({
             where: { id },
             select: {
                 id: true,
@@ -46,6 +48,27 @@ export class UserService {
                 email: true,
                 role: true,
             },
+        });
+    }
+
+    async getAll() {
+        return await prisma.user.findMany();
+    }
+
+    async update(id: string, userData: LimitedUserData) {
+        return await prisma.user.update({
+            where: { id },
+            data: {
+                userName: userData.userName,
+                email: userData.email,
+                role: userData.role,
+            },
+        });
+    }
+
+    async deleteById(id: string) {
+        return await prisma.user.delete({
+            where: { id },
         });
     }
 }

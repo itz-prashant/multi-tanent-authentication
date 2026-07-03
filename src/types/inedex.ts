@@ -1,9 +1,12 @@
 import { Request } from "express";
+import { Role } from "../generated/prisma/enums";
 
 export interface UserData {
     userName: string;
     email: string;
     password: string;
+    role: Role;
+    tenantId?: number;
 }
 
 export interface RegisterUserBody extends Request {
@@ -34,4 +37,13 @@ export interface TenantData {
 
 export interface CreateTenantBody extends Request {
     body: TenantData;
+}
+export interface CreateUserRequest extends Request {
+    body: UserData;
+}
+
+export interface LimitedUserData {
+    userName: string;
+    email: string;
+    role: Role;
 }
