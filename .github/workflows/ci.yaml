@@ -21,6 +21,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client
+        run: pnpm exec prisma generate
       - name: Run eslint
         run: pnpm run lint:check  
       - name: Build ts
