@@ -1,6 +1,10 @@
 import app from "./app";
 import Config from "./config/env";
+import { createDefaultAdmin } from "./lib/createDefaultAdmin";
 import prisma from "./lib/prisma";
+import { UserService } from "./services/UserService";
+
+const userService = new UserService();
 
 async function StartServer() {
     try {
@@ -8,7 +12,7 @@ async function StartServer() {
 
         await prisma.user.count();
         console.log("Database connected successfully");
-
+        await createDefaultAdmin(userService);
         app.listen(Config.PORT, () => {
             console.log(`Server listening on PORT:${Config.PORT}`);
         });
