@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express";
 import { UserService } from "../services/UserService";
-import { CreateUserRequest } from "../types/inedex";
+import { CreateUserRequest, UserQueryParams } from "../types/inedex";
 import createHttpError from "http-errors";
 
 export class UserController {
@@ -28,10 +28,16 @@ export class UserController {
     }
 
     async getAll(req: Request, res: Response, next: NextFunction) {
+        const validateQuery = res.locals.validatedQuery as UserQueryParams;
         try {
-            const users = await this.userService.getAll();
+            const [users, count] = await this.userService.getAll(validateQuery);
 
-            res.json({ users });
+            res.json({
+                data: users,
+                total: count,
+                perPage: validateQuery.perPage,
+                currentPage: validateQuery.currentPage,
+            });
         } catch (error) {
             next(error);
         }

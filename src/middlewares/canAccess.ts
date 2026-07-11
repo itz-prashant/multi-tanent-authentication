@@ -8,6 +8,9 @@ export const canAccess = (roles: string[]) => {
 
         const roleFromToken = _req.auth.role;
 
+        console.log("req", _req.auth);
+        console.log("roles", roles);
+
         if (!roles.includes(roleFromToken)) {
             const error = createHttpError(
                 403,

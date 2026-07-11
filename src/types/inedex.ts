@@ -47,3 +47,10 @@ export interface LimitedUserData {
     email: string;
     role: Role;
 }
+
+export interface UserQueryParams {
+    perPage: number;
+    currentPage: number;
+    q: string;
+    role: Role;
+}

@@ -1,7 +1,8 @@
 import createHttpError from "http-errors";
 import prisma from "../lib/prisma";
-import { LimitedUserData, UserData } from "../types/inedex";
+import { LimitedUserData, UserData, UserQueryParams } from "../types/inedex";
 import bcrypt from "bcrypt";
+import { Prisma, Role } from "../generated/prisma/client";
 
 export class UserService {
     async create({ userName, email, password, role, tenantId }: UserData) {
@@ -51,8 +52,54 @@ export class UserService {
         });
     }
 
-    async getAll() {
-        return await prisma.user.findMany();
+    async getAll(validateQuery: UserQueryParams) {
+        const where: Prisma.UserWhereInput = {
+            role: {
+                not: Role.CUSTOMER,
+            },
+        };
+
+        if (validateQuery.q) {
+            where.OR = [
+                {
+                    userName: {
+                        contains: validateQuery.q,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    email: {
+                        contains: validateQuery.q,
+                        mode: "insensitive",
+                    },
+                },
+            ];
+        }
+
+        if (validateQuery.role) {
+            where.role = validateQuery.role;
+        }
+
+        const [users, total] = await Promise.all([
+            prisma.user.findMany({
+                where,
+                select: {
+                    id: true,
+                    userName: true,
+                    email: true,
+                    role: true,
+                    tenant: true,
+                },
+                skip: (validateQuery.currentPage - 1) * validateQuery.perPage,
+                take: validateQuery.perPage,
+                orderBy: {
+                    id: "desc",
+                },
+            }),
+            prisma.user.count({ where }),
+        ]);
+
+        return [users, total];
     }
 
     async update(id: string, userData: LimitedUserData) {
