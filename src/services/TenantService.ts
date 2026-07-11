@@ -1,5 +1,6 @@
+import { Prisma } from "../generated/prisma/client";
 import prisma from "../lib/prisma";
-import { TenantData } from "../types/inedex";
+import { TenantData, UserQueryParams } from "../types/inedex";
 
 export class TenantService {
     async create(tenantData: TenantData) {
@@ -11,8 +12,39 @@ export class TenantService {
         });
     }
 
-    async getAll() {
-        return await prisma.tenant.findMany();
+    async getAll(validateQuery: UserQueryParams) {
+        const where: Prisma.TenantWhereInput = {};
+
+        if (validateQuery.q) {
+            where.OR = [
+                {
+                    name: {
+                        contains: validateQuery.q,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    address: {
+                        contains: validateQuery.q,
+                        mode: "insensitive",
+                    },
+                },
+            ];
+        }
+        const [user, total] = await Promise.all([
+            prisma.tenant.findMany({
+                where,
+                skip: (validateQuery.currentPage - 1) * validateQuery.perPage,
+                take: validateQuery.perPage,
+                orderBy: {
+                    id: "desc",
+                },
+            }),
+
+            prisma.tenant.count({ where }),
+        ]);
+
+        return [user, total];
     }
 
     async findById(id: number) {

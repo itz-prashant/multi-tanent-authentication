@@ -1,5 +1,5 @@
 import { Response, NextFunction, Request } from "express";
-import { CreateTenantBody } from "../types/inedex";
+import { CreateTenantBody, UserQueryParams } from "../types/inedex";
 import { TenantService } from "../services/TenantService";
 import createHttpError from "http-errors";
 
@@ -19,10 +19,18 @@ export class TenantController {
     }
 
     async getAll(req: Request, res: Response, next: NextFunction) {
-        try {
-            const tenants = await this.tenantService.getAll();
+        const validateQuery = res.locals.validatedQuery as UserQueryParams;
 
-            res.json(tenants);
+        try {
+            const [tenants, count] =
+                await this.tenantService.getAll(validateQuery);
+
+            res.json({
+                data: tenants,
+                total: count,
+                perPage: validateQuery.perPage,
+                currentPage: validateQuery.currentPage,
+            });
         } catch (error) {
             next(error);
         }

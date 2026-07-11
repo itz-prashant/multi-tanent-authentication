@@ -6,6 +6,8 @@ import { canAccess } from "../middlewares/canAccess";
 import { validator } from "../validator/validator";
 import { tenantSchema } from "../validator/tenant.schema";
 import { Role } from "../generated/prisma/enums";
+import { queryValidator } from "../validator/queryValidator";
+import { tenantQuerySchema } from "../validator/tenantquery.schema";
 
 const router = express.Router();
 
@@ -20,7 +22,9 @@ router.post(
     (req, res, next) => tenantController.create(req, res, next),
 );
 
-router.get("/", (req, res, next) => tenantController.getAll(req, res, next));
+router.get("/", queryValidator(tenantQuerySchema), (req, res, next) =>
+    tenantController.getAll(req, res, next),
+);
 
 router.get("/:id", authenticate, canAccess([Role.ADMIN]), (req, res, next) =>
     tenantController.getOne(req, res, next),
